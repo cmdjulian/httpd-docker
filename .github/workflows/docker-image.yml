@@ -39,8 +39,9 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
             cmdjulian/httpd
           tags: |
+            type=schedule
             type=semver,pattern={{raw}}
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            type=raw,value=latest,enable={{is_default_branch}}
           labels:
             org.opencontainers.image.documentation=https://openwrt.org/docs/guide-user/services/webserver/http.httpd
             org.opencontainers.image.vendor=cmdjulian
