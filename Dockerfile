@@ -10,12 +10,10 @@ RUN tar --strip-components=1 -xjf busybox.tar.bz2
 
 # start multi arch build here
 ARG TARGETOS TARGETARCH
+RUN apk add gcc musl-dev make perl
+RUN make allnoconfig
+# heredocs screw up multi arch builds if one than more command is present
 RUN <<EOF
-set -e
-
-apk add gcc musl-dev make perl
-make allnoconfig
-
 echo "
 CONFIG_STATIC=y
 CONFIG_HTTPD=y
@@ -39,10 +37,9 @@ CONFIG_FEATURE_SYSLOG_INFO=y
 CONFIG_FEATURE_SYSLOG=y
 CONFIG_LOGIN=y
 CONFIG_FEATURE_NOLOGIN=y" | cat - .config | tee .config
-
-make -s
-make install
 EOF
+
+RUN make -s && make install
 
 
 FROM alpine:3.16 AS tini
