@@ -16,8 +16,8 @@ set -e
 apk add gcc musl-dev make perl
 make allnoconfig
 
-echo -n \
-"CONFIG_STATIC=y
+echo "
+CONFIG_STATIC=y
 CONFIG_HTTPD=y
 CONFIG_FEATURE_HTTPD_PORT_DEFAULT=80
 CONFIG_FEATURE_HTTPD_RANGES=y
@@ -53,36 +53,33 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-stati
 RUN chmod +x /bin/tini
 
 
-FROM debian:11-slim as builder
-
-COPY --from=tini /bin/tini /bin/tini
-COPY --from=httpd /busybox/_install/bin/busybox /bin/busybox
-
-RUN <<EOF
-apt update
-apt install upx-ucl -y
-touch /home/config.conf
-upx /bin/busybox
-ln -s /bin/busybox /sbin/nologin
-ln -s /bin/busybox /bin/httpd
-EOF
+FROM --platform=linux/amd64 alpine:3.16 as builder
 
 COPY <<EOF /etc/group
 root:x:0:root
 www-data:x:10001:httpd
 EOF
-
 COPY <<EOF /etc/passwd
 root:x:0:0:root:/root:/sbin/nologin
 httpd:x:10001:10001::/opt/httpd:/sbin/nologin
 EOF
+COPY --from=tini /bin/tini /bin/tini
+COPY --from=httpd /busybox/_install/bin/busybox /bin/busybox
+
+RUN apk add coreutils upx
+RUN ln -sf /bin/busybox /sbin/nologin
+RUN ln -sf /bin/busybox /bin/httpd
+RUN upx /bin/busybox
 
 
 FROM scratch as squash
 
+# empty config file
+COPY <<EOF /etc/httpd/config.conf
+EOF
+
 COPY --from=builder /tmp /tmp
 COPY --from=builder /opt /opt
-COPY --from=builder /home/config.conf /etc/httpd/config.conf
 COPY --from=builder /etc/group /etc/passwd /etc/
 COPY --from=builder /bin/busybox /bin/httpd /bin/tini /bin/
 COPY --from=builder /sbin/ /sbin/
