@@ -21,6 +21,9 @@ jobs:
           tags: |
             type=semver,pattern={{raw}}
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+          labels:
+            org.opencontainers.image.documentation=https://openwrt.org/docs/guide-user/services/webserver/http.httpd
+            org.opencontainers.image.vendor=cmdjulian
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -45,9 +48,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
-            REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
-            VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

@@ -57,20 +57,6 @@ COPY --from=builder /sbin/ /sbin/
 
 FROM scratch
 
-ARG BUILDTIME REVISION VERSION
-LABEL org.opencontainers.image.authors="cmdjulian" \
-      org.opencontainers.image.base.name="scratch" \
-      org.opencontainers.image.created=${BUILDTIME} \
-      org.opencontainers.image.description="busybox httpd server" \
-      org.opencontainers.image.documentation="https://github.com/cmdjulian/minimal-httpd-docker/blob/main/README.md" \
-      org.opencontainers.image.ref.name="main" \
-      org.opencontainers.image.revision=${REVISION} \
-      org.opencontainers.image.source="https://github.com/cmdjulian/minimal-httpd-docker/tree/main" \
-      org.opencontainers.image.title="httpd" \
-      org.opencontainers.image.url="https://github.com/cmdjulian/minimal-httpd-docker/tree/main" \
-      org.opencontainers.image.vendor="cmdjulian" \
-      org.opencontainers.image.version=${VERSION}
-
 ENV PATH=/bin
 USER 10001:10001
 COPY --from=squash / /
