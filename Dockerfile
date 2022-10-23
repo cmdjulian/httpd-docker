@@ -9,7 +9,7 @@ RUN git clone --depth 1 https://github.com/mirror/busybox.git . && \
 # https://subscription.packtpub.com/book/hardware-and-creative/9781783289851/1/ch01lvl1sec08/configuring-busybox-simple
 COPY --link config .config
 
-RUN apk add --no-cache gcc musl-dev make perl
+RUN apk add --no-cache gcc musl-dev make perl git
 RUN make -s -j4 && make install
 
 
