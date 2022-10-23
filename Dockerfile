@@ -3,13 +3,13 @@
 FROM alpine:3.16 AS httpd
 
 WORKDIR /busybox
+RUN apk add --no-cache gcc musl-dev make perl git
 RUN git clone --depth 1 https://github.com/mirror/busybox.git . && \
     git -c advice.detachedHead=false checkout 707a7ef
 
 # https://subscription.packtpub.com/book/hardware-and-creative/9781783289851/1/ch01lvl1sec08/configuring-busybox-simple
 COPY --link config .config
 
-RUN apk add --no-cache gcc musl-dev make perl git
 RUN make -s -j4 && make install
 
 
