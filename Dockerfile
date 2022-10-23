@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.4.3
 
-FROM gcc:12 AS httpd
+FROM alpine:3.15 AS httpd
 
 WORKDIR /busybox
 RUN git clone --depth 1 https://github.com/mirror/busybox.git . && \
@@ -9,8 +9,8 @@ RUN git clone --depth 1 https://github.com/mirror/busybox.git . && \
 # https://subscription.packtpub.com/book/hardware-and-creative/9781783289851/1/ch01lvl1sec08/configuring-busybox-simple
 COPY --link config .config
 
-# start multi arch build here
-RUN make -s && make install
+RUN apk add --no-cache gcc musl-dev make perl
+RUN make -s -j4 && make install
 
 
 FROM tunococ/alpine_cmake:3.16.0_3.23.1-r0 AS tini
