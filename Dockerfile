@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.4.3
 
-FROM alpine:3.15 AS httpd
+FROM alpine:3.16 AS httpd
 
 WORKDIR /busybox
 RUN git clone --depth 1 https://github.com/mirror/busybox.git . && \
