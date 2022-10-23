@@ -1,11 +1,12 @@
 # syntax = docker/dockerfile:1.4.3
 
-FROM alpine:3.16 AS gcc
+FROM alpine:3.16@sha256:bc41182d7ef5ffc53a40b044e725193bc10142a1243f395ee852a8d9730fc2ad AS build-tools
 RUN apk add --no-cache gcc musl-dev make perl git cmake
+COPY --from=starudream/upx:latest@sha256:6f77c8fe795d114b619cf0ebd98825d5f0804ec0391a3e901102032f32c565b6 /usr/bin/upx /usr/bin/upx
 WORKDIR /app
 
 
-FROM gcc AS httpd
+FROM build-tools AS httpd
 
 # https://subscription.packtpub.com/book/hardware-and-creative/9781783289851/1/ch01lvl1sec08/configuring-busybox-simple
 RUN git clone --depth 1 https://github.com/mirror/busybox.git .
@@ -14,7 +15,7 @@ COPY --link config .config
 RUN make -s -j4 && make install
 
 
-FROM gcc AS tini
+FROM build-tools AS tini
 
 ENV CFLAGS="-DPR_SET_CHILD_SUBREAPER=36 -DPR_GET_CHILD_SUBREAPER=37"
 RUN git clone --depth 1 https://github.com/krallin/tini.git .
@@ -24,14 +25,14 @@ RUN make install
 
 
 # upx is only available for amd64, but it can also take care of binaries for different architectures
-FROM starudream/upx:latest AS builder
+FROM build-tools AS builder
 
 COPY --link ./group /etc/group
 COPY --link ./passwd /etc/passwd
 COPY --link --from=tini /usr/local/bin/tini-static /bin/tini
 COPY --link --from=httpd /app/_install/bin/busybox /bin/httpd
 
-RUN upx /bin/httpd /bin/tini
+RUN upx --best --ultra-brute /bin/httpd /bin/tini
 
 
 FROM scratch AS squash

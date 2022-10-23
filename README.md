@@ -46,4 +46,4 @@ EOF
 The image is inspired by Florian Lipans blog post regarding minimal http server docker
 image [click me](https://lipanski.com/posts/smallest-docker-image-static-website) by does better by providing multi-arch
 support and using `tini` init wrapper for graceful init signal handling. I also used `upx` to further reduce the image
-size, to actually achieve a total image size of just `134kB`!
+size, to actually achieve a total image size of just `124kB`!
