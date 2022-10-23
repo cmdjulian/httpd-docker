@@ -1,6 +1,7 @@
 # syntax = docker/dockerfile:1.4.3
 
 FROM alpine:3.16@sha256:bc41182d7ef5ffc53a40b044e725193bc10142a1243f395ee852a8d9730fc2ad AS build-tools
+
 RUN apk add --no-cache gcc musl-dev make perl git cmake
 COPY --from=starudream/upx:latest@sha256:6f77c8fe795d114b619cf0ebd98825d5f0804ec0391a3e901102032f32c565b6 /usr/bin/upx /usr/bin/upx
 WORKDIR /app
@@ -24,7 +25,6 @@ RUN make -s -j4
 RUN make install
 
 
-# upx is only available for amd64, but it can also take care of binaries for different architectures
 FROM build-tools AS builder
 
 COPY --link ./group /etc/group
