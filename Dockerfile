@@ -52,7 +52,7 @@ COPY --from=builder /tmp /tmp
 COPY --from=builder /opt /opt
 COPY --from=builder /etc/group /etc/passwd /etc/
 COPY --from=builder /bin/busybox /bin/httpd /bin/tini /bin/
-COPY --from=builder /sbin/ /sbin/
+COPY --from=builder /sbin/nologin /sbin/nologin
 
 
 FROM scratch
