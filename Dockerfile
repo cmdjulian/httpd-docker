@@ -5,6 +5,8 @@ FROM --platform=$BUILDPLATFORM tunococ/alpine_cmake:3.16.0_3.23.1-r0 AS httpd
 WORKDIR /busybox
 RUN git clone --depth 1 https://github.com/mirror/busybox.git . && \
     git -c advice.detachedHead=false checkout 707a7ef
+
+# https://subscription.packtpub.com/book/hardware-and-creative/9781783289851/1/ch01lvl1sec08/configuring-busybox-simple
 COPY config .config
 
 # start multi arch build here
