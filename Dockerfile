@@ -24,7 +24,7 @@ RUN make -s -j4
 RUN make install
 
 
-FROM --platform=linux/amd64 build-tools AS builder
+FROM --platform=$BUILDPLATFORM build-tools AS builder
 
 RUN apk add --no-cache upx
 
