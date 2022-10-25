@@ -33,7 +33,7 @@ The second one copies a custom config file to redirects every sub-path to the in
 ```Dockerfile
 # syntax = docker/dockerfile:1.4.3
 
-FROM cmdjulian/httpd:v1.35.0 
+FROM cmdjulian/httpd:v1.36.0 
 
 COPY --link ./dist/app/ /opt/httpd
 COPY --link <<EOF /etc/httpd/httpd.conf
