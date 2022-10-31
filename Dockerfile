@@ -32,7 +32,7 @@ COPY --link ./passwd /etc/passwd
 COPY --link --from=tini /usr/local/bin/tini-static /bin/tini
 COPY --link --from=httpd /app/_install/bin/busybox /bin/httpd
 
-RUN upx --best --ultra-brute /bin/httpd /bin/tini
+RUN upx -9 --best --ultra-brute /bin/httpd /bin/tini
 
 
 FROM scratch AS squash
