@@ -31,7 +31,6 @@ COPY --link ./group /etc/group
 COPY --link ./passwd /etc/passwd
 COPY --link --from=tini /usr/local/bin/tini-static /bin/tini
 COPY --link --from=httpd /app/_install/bin/busybox /bin/httpd
-
 RUN upx -9 --best --ultra-brute /bin/httpd /bin/tini
 
 
