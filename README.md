@@ -1,10 +1,6 @@
 [![Docker Pulls](https://badgen.net/docker/pulls/cmdjulian/httpd?icon=docker&label=pulls)](https://hub.docker.com/r/cmdjulian/httpd/)
 [![Docker Stars](https://badgen.net/docker/stars/cmdjulian/httpd?icon=docker&label=stars)](https://hub.docker.com/r/cmdjulian/httpd/)
 [![Docker Image Size](https://badgen.net/docker/size/cmdjulian/httpd?icon=docker&label=image%20size)](https://hub.docker.com/r/cmdjulian/httpd/)
-![Github stars](https://badgen.net/github/stars/cmdjulian/httpd-docker?icon=github&label=stars)
-![Github forks](https://badgen.net/github/forks/cmdjulian/httpd-docker?icon=github&label=forks)
-![Github issues](https://img.shields.io/github/issues/cmdjulian/httpd-docker)
-![Github last-commit](https://img.shields.io/github/last-commit/cmdjulian/httpd-docker)
 
 # httpd-docker
 
