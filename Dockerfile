@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.4.3
 
-FROM alpine:3.16@sha256:b95359c2505145f16c6aa384f9cc74eeff78eb36d308ca4fd902eeeb0a0b161b AS build-tools
+FROM alpine:3.17@sha256:f271e74b17ced29b915d351685fd4644785c6d1559dd1f2d4189a5e851ef753a AS build-tools
 
 RUN apk add --no-cache gcc musl-dev make perl git cmake
 COPY --from=starudream/upx:latest@sha256:6f77c8fe795d114b619cf0ebd98825d5f0804ec0391a3e901102032f32c565b6 /usr/bin/upx /usr/bin/upx
