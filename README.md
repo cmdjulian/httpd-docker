@@ -35,7 +35,7 @@ The first copy instruction moves the compiled angular ap into the content root.
 The second one copies a custom config file to redirects every sub-path to the index.html.
 
 ```Dockerfile
-# syntax = docker/dockerfile:1.4.3
+# syntax = docker/dockerfile:1.5.2
 
 FROM cmdjulian/httpd:v1.36.0 
 

@@ -1,18 +1,20 @@
-# syntax = docker/dockerfile:1.4.3
+# syntax = docker/dockerfile:1.5.2
 
 FROM alpine:3.17@sha256:69665d02cb32192e52e07644d76bc6f25abeb5410edc1c7a81a10ba3f0efb90a AS build-tools
 
 RUN apk add --no-cache gcc musl-dev make perl git cmake
-COPY --from=starudream/upx:latest@sha256:6f77c8fe795d114b619cf0ebd98825d5f0804ec0391a3e901102032f32c565b6 /usr/bin/upx /usr/bin/upx
 WORKDIR /app
 
 
 FROM build-tools AS httpd
 
+ARG BUSYBOX_VERSION=1_36_0
+
 # https://subscription.packtpub.com/book/hardware-and-creative/9781783289851/1/ch01lvl1sec08/configuring-busybox-simple
 RUN git clone --depth 1 https://github.com/mirror/busybox.git .
-RUN git -c advice.detachedHead=false checkout 707a7ef
-COPY --link config .config
+RUN git fetch origin tag $BUSYBOX_VERSION --no-tags
+RUN git -c advice.detachedHead=false checkout tags/$BUSYBOX_VERSION
+COPY --link ./config .config
 RUN make -s -j4 && make install
 
 
@@ -25,22 +27,24 @@ RUN make -s -j4
 RUN make install
 
 
-FROM build-tools AS builder
-
-COPY --link ./group /etc/group
-COPY --link ./passwd /etc/passwd
-COPY --link --from=tini /usr/local/bin/tini-static /bin/tini
-COPY --link --from=httpd /app/_install/bin/busybox /bin/httpd
-RUN upx -9 --best --ultra-brute /bin/httpd /bin/tini
-
-
 FROM scratch AS squash
 
-COPY --link ./httpd.conf /etc/httpd/httpd.conf
-COPY --link --from=builder /tmp /tmp
-COPY --link --from=builder /opt /opt
-COPY --link --from=builder /etc/group /etc/passwd /etc/
-COPY --link --from=builder /bin/httpd /bin/tini /bin/
+COPY --link --from=build-tools /tmp /tmp
+COPY --link --from=build-tools /opt /opt
+COPY --link <<EOF /etc/group
+root:x:0:root
+www-data:x:10001:httpd
+EOF
+COPY --link <<EOF /etc/passwd
+root:x:0:0:root:/root:/sbin/nologin
+httpd:x:10001:10001::/opt/httpd:/sbin/nologin
+EOF
+COPY --link <<EOF /etc/httpd/httpd.conf
+
+EOF
+
+COPY --link --from=tini /usr/local/bin/tini-static /bin/tini
+COPY --link --from=httpd /app/_install/bin/busybox /bin/httpd
 
 
 FROM scratch
