@@ -1,5 +1,4 @@
 # syntax = docker/dockerfile:1.5.2
-
 FROM alpine:3.17@sha256:69665d02cb32192e52e07644d76bc6f25abeb5410edc1c7a81a10ba3f0efb90a AS build-tools
 
 RUN apk add --no-cache gcc musl-dev make perl git cmake
@@ -21,6 +20,7 @@ RUN make -s -j4 && make install
 FROM build-tools AS tini
 
 ENV CFLAGS="-DPR_SET_CHILD_SUBREAPER=36 -DPR_GET_CHILD_SUBREAPER=37"
+
 RUN git clone --depth 1 -c gc.auto=0 https://github.com/krallin/tini.git .
 RUN cmake .
 RUN make -s -j4
