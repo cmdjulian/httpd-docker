@@ -13,7 +13,7 @@ ARG BUSYBOX_VERSION=1_36_0
 # https://subscription.packtpub.com/book/hardware-and-creative/9781783289851/1/ch01lvl1sec08/configuring-busybox-simple
 RUN git clone --depth 1 https://github.com/mirror/busybox.git .
 RUN git fetch origin tag $BUSYBOX_VERSION --no-tags
-RUN git -c advice.detachedHead=false checkout tags/$BUSYBOX_VERSION
+RUN git -c advice.detachedHead=false -c gc.auto=0 checkout tags/$BUSYBOX_VERSION
 COPY --link ./config .config
 RUN make -s -j4 && make install
 
@@ -21,7 +21,7 @@ RUN make -s -j4 && make install
 FROM build-tools AS tini
 
 ENV CFLAGS="-DPR_SET_CHILD_SUBREAPER=36 -DPR_GET_CHILD_SUBREAPER=37"
-RUN git clone --depth 1 https://github.com/krallin/tini.git .
+RUN git clone --depth 1 -c gc.auto=0 https://github.com/krallin/tini.git .
 RUN cmake .
 RUN make -s -j4
 RUN make install

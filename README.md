@@ -51,3 +51,12 @@ The image is inspired by Florian Lipans blog post regarding minimal http server 
 image [click me](https://lipanski.com/posts/smallest-docker-image-static-website) by does better by providing multi-arch
 support and using `tini` init wrapper for graceful init signal handling. I also used `upx` to further reduce the image
 size, to actually achieve a total image size of just `124kB`!
+
+## Development
+
+- To make busybox compile for `arm/v7`, we have to set `CONFIG_LFS=y` in the
+  config [GitHub issue](https://github.com/dyne/ZShaolin/blob/master/build/busybox/README.md)
+- `CONFIG_STATIC=y` has to be set to compile httpd statically. If we don't do that, the error message from `tini` is
+  very misleading. It says something like `/bin/httpd` not found, even if this file exists
+- building a specific version can be archived by providing a build-arg as `BUSYBOX_VERSION=$VERSION`. Keep in mind
+  though, that the config present in [config](./config) is most definitely not compatible and needs adjustments
