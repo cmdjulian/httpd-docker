@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.5.2
 # tag needed for riscv64 support
-FROM alpine:20230208 AS build-tools
+FROM alpine:20230329 AS build-tools
 
 RUN apk add --no-cache gcc musl-dev make perl git cmake
 WORKDIR /app
