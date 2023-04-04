@@ -79,6 +79,7 @@ jobs:
           cache-to: type=gha,mode=max
           sbom: true
           provenance: true
+          outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},annotation-index.org.opencontainers.image.description=minimal multi-arch httpd docker image based on scratch 🐋
 
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
