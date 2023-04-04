@@ -34,7 +34,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ${{ env.REGISTRY }}/httpd
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
             cmdjulian/httpd
           tags: |
             type=semver,pattern=v{{version}}
