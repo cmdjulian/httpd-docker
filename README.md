@@ -2,9 +2,9 @@
 [![Docker Stars](https://badgen.net/docker/stars/cmdjulian/httpd?icon=docker&label=stars)](https://hub.docker.com/r/cmdjulian/httpd/)
 [![Docker Image Size](https://badgen.net/docker/size/cmdjulian/httpd?icon=docker&label=image%20size)](https://hub.docker.com/r/cmdjulian/httpd/)
 
-# httpd-docker
+# minimal multi arch `httpd` docker image
 
-## General
+![](logo.png)
 
 Minimal `httpd` shell-less multi-arch docker image based on scratch.
 
@@ -47,10 +47,9 @@ EOF
 
 ## Credits
 
-The image is inspired by Florian Lipans blog post regarding minimal http server docker
-image [click me](https://lipanski.com/posts/smallest-docker-image-static-website) by does better by providing multi-arch
-support and using `tini` init wrapper for graceful init signal handling. I also used `upx` to further reduce the image
-size, to actually achieve a total image size of just `124kB`!
+The image is inspired by Florian Lipans [blog post](https://lipanski.com/posts/smallest-docker-image-static-website)
+However, it does not provide multi-arch support and also lacks a proper init wrapper like `tini`.
+Logo is taken from [Mario Pinkster](https://www.sentiatechblog.com/running-apache-in-a-docker-container)
 
 ## Development
 
