@@ -9,8 +9,8 @@
 Minimal `httpd` shell-less multi-arch docker image based on scratch.
 
 The image is based on scratch and contains a static striped busybox binary just including `httpd` applet.
-The image is published on docker hub under `cmdjulian/httpd:{version}`. It supports `amd64`, `arm` and  `arm64`
-architecture.
+The image is published on docker hub under `cmdjulian/httpd:{version}`. It supports `arm/v6`, `arm/v7`, `arm64`, `i386`, `amd64`, `ppc64le` and `s390x`
+architectures.
 
 Per default, it runs as a non-root user `httpd(id=65532)`. Alternatively, you can also switch to `root(id=0)`.
 
