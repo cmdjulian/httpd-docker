@@ -1,12 +1,9 @@
 # syntax = docker/dockerfile:1.5.2
 # tag needed for riscv64 support
-FROM alpine:3.19 AS build-tools
+FROM --platform=$BUILDPLATFORM alpine:3.19 AS httpd_git
 
-RUN apk add --no-cache gcc musl-dev make perl git cmake curl
+RUN apk add --no-cache git
 WORKDIR /app
-
-
-FROM build-tools AS httpd
 
 ARG BUSYBOX_VERSION=1_36_0
 
@@ -14,12 +11,20 @@ ARG BUSYBOX_VERSION=1_36_0
 RUN git clone --depth 1 https://github.com/mirror/busybox.git .
 RUN git fetch origin tag "$BUSYBOX_VERSION" --no-tags
 RUN git -c advice.detachedHead=false -c gc.auto=0 checkout "tags/$BUSYBOX_VERSION"
-COPY --link ./config .config
+
+
+FROM alpine:3.19 AS httpd
+
+RUN apk add --no-cache gcc make musl-dev
+COPY --link --from=httpd_git /app /app
+COPY --link ./config /app/.config
+WORKDIR /app
 RUN make -s -j4 && make install
 
 
-FROM build-tools AS tini
+FROM --platform=$BUILDPLATFORM alpine:3.19 AS tini
 
+RUN apk add --no-cache curl
 ARG TINI_VERSION="v0.19.0"
 ARG TARGETPLATFORM
 RUN <<EOF
@@ -42,14 +47,15 @@ case "$TARGETPLATFORM" in
   *) echo "Unsupported architecture: $TARGETPLATFORM"; exit 1
   ;;
 esac
+echo "downloading tiny $TINI_VERSION for arch $TINI_ARCH"
 curl -fsSLo /tini "https://github.com/krallin/tini/releases/download/$TINI_VERSION/tini-static-$TINI_ARCH"
 EOF
 
 
 FROM scratch AS squash
 
-COPY --link --from=build-tools /tmp /tmp
-COPY --link --from=build-tools /opt /opt
+COPY --link --from=httpd_git /tmp /tmp
+COPY --link --from=httpd_git /opt /opt
 COPY --link --chown=0:0 --chmod=644 <<EOF /etc/group
 root:x:0:root
 www-data:x:65532:httpd
