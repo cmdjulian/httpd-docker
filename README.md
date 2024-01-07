@@ -12,7 +12,7 @@ The image is based on scratch and contains a static striped busybox binary just 
 The image is published on docker hub under `cmdjulian/httpd:{version}`. It supports `amd64`, `arm` and  `arm64`
 architecture.
 
-Per default, it runs as a non-root user `httpd(id=10001)`. Alternatively, you can also switch to `root(id=0)`.
+Per default, it runs as a non-root user `httpd(id=65532)`. Alternatively, you can also switch to `root(id=0)`.
 
 The http process is started by [tini](https://github.com/krallin/tini), a small init wrapper. It takes responsibility in
 forwarding the correct termination signals to the underlying `httpd` process.
