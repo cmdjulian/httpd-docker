@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.5.2
 # tag needed for riscv64 support
-FROM --platform=$BUILDPLATFORM alpine:3.19 AS httpd_git
+FROM --platform=$BUILDPLATFORM alpine:3.20 AS httpd_git
 
 RUN apk add --no-cache git
 WORKDIR /app
@@ -13,7 +13,7 @@ RUN git fetch origin tag "$BUSYBOX_VERSION" --no-tags
 RUN git -c advice.detachedHead=false -c gc.auto=0 checkout "tags/$BUSYBOX_VERSION"
 
 
-FROM alpine:3.19 AS httpd
+FROM alpine:3.20 AS httpd
 
 RUN apk add --no-cache gcc make musl-dev
 COPY --link --from=httpd_git /app /app
@@ -22,7 +22,7 @@ WORKDIR /app
 RUN make -s -j4 && make install
 
 
-FROM --platform=$BUILDPLATFORM alpine:3.19 AS tini
+FROM --platform=$BUILDPLATFORM alpine:3.20 AS tini
 
 RUN apk add --no-cache curl
 ARG TINI_VERSION="v0.19.0"
