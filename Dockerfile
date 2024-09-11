@@ -1,4 +1,4 @@
-# syntax = docker/dockerfile:1.5.2
+# syntax = docker/dockerfile:1.10.0
 # tag needed for riscv64 support
 FROM --platform=$BUILDPLATFORM alpine:3.19 AS httpd_git
 
